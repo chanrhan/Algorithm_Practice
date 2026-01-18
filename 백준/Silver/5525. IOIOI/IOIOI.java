@@ -14,25 +14,24 @@ public class Main {
 
         int N = Integer.parseInt(br.readLine());
         int M = Integer.parseInt(br.readLine());
-        String str = br.readLine();
+        char[] str = br.readLine().toCharArray();
 
-        String ioi = String.format("%sI", "IO".repeat(N));
-        int ioiLen = (N * 2) + 1;
         int count = 0;
-
-        char c;
-        for (int i = 0; i < M - ioiLen + 1; ++i) {
-            c = str.charAt(i);
-            if (c == 'I') {
-                String n = str.substring(i, i + ioiLen);
-                if (n.equals(ioi)) {
-                    ++count;
-                    ++i;
+        int result = 0;
+        for (int i = 0; i < M - 2; ++i) {
+            if (str[i] == 'I' && str[i + 1] == 'O' && str[i + 2] == 'I') {
+                ++count;
+                if (count == N) {
+                    --count;
+                    ++result;
                 }
+                ++i;
+            } else {
+                count = 0;
             }
         }
 
-        bw.write(Integer.toString(count));
+        bw.write(Integer.toString(result));
 
         // close
         bw.close();
