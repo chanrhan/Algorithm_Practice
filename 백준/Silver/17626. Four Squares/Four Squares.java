@@ -12,30 +12,23 @@ public class Main {
         Queue<Integer> queue = new ArrayDeque<>();
         queue.add(N);
         int size, curr, num, pow, count = 0;
-        double min;
-        boolean[] visited = new boolean[50001];
         while (!queue.isEmpty()) {
             size = queue.size();
             while (size > 0) {
                 curr = queue.poll();
 
-                visited[curr] = true;
-//                System.out.println("curr: " + curr);
                 if (curr == 0) {
                     return count;
                 }
                 --size;
                 num = (int) Math.floor(Math.sqrt(curr));
-                min = Math.sqrt((double) curr / 2);
                 do {
                     pow = (int) Math.pow(num, 2);
                     if (curr == pow) {
                         return count + 1;
                     }
                     if (curr - pow > 0) {
-                        if (!visited[curr - pow]) {
-                            queue.add(curr - pow);
-                        }
+                        queue.add(curr - pow);
                     }
                     --num;
                 } while (num > 0);
