@@ -13,7 +13,6 @@ public class Main {
     static final int HORIZONTAL = 0;
     static final int VERTICAL = 1;
     static final int CROSS = 2;
-    static Integer[][][] dp;
     static int count = 0;
 
     public static void dp(int r, int c, int shape) {
@@ -21,19 +20,17 @@ public class Main {
             ++count;
             return;
         }
-        if (dp[r][c][shape] == null) {
-            if (shape != HORIZONTAL && r + 1 < N && grid[r + 1][c] == 0) {
-                // 아래로 밀기
-                dp(r + 1, c, VERTICAL);
-            }
-            if (shape != VERTICAL && c + 1 < N && grid[r][c + 1] == 0) {
-                // 아래로 밀기
-                dp(r, c + 1, HORIZONTAL);
-            }
-            if (r + 1 < N && c + 1 < N && grid[r + 1][c] == 0 && grid[r][c + 1] == 0 && grid[r + 1][c + 1] == 0) {
-                // 아래로 밀기
-                dp(r + 1, c + 1, CROSS);
-            }
+        if (shape != HORIZONTAL && r + 1 < N && grid[r + 1][c] == 0) {
+            // 아래로 밀기
+            dp(r + 1, c, VERTICAL);
+        }
+        if (shape != VERTICAL && c + 1 < N && grid[r][c + 1] == 0) {
+            // 아래로 밀기
+            dp(r, c + 1, HORIZONTAL);
+        }
+        if (r + 1 < N && c + 1 < N && grid[r + 1][c] == 0 && grid[r][c + 1] == 0 && grid[r + 1][c + 1] == 0) {
+            // 아래로 밀기
+            dp(r + 1, c + 1, CROSS);
         }
     }
 
@@ -42,7 +39,6 @@ public class Main {
         StringTokenizer tokenizer = new StringTokenizer(br.readLine());
         N = Integer.parseInt(tokenizer.nextToken());
         grid = new int[N][N];
-        dp = new Integer[N][N][3];
 
         for (int r = 0; r < N; ++r) {
             tokenizer = new StringTokenizer(br.readLine());
