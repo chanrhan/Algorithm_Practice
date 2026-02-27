@@ -3,6 +3,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
@@ -50,7 +52,7 @@ public class Main {
             seq2[i] = Integer.parseInt(tokenizer.nextToken());
         }
 
-        PriorityQueue<Number> result = new PriorityQueue<>();
+        List<Integer> result = new ArrayList<>();
 
         Number curr;
         int a_start = -1;
@@ -62,7 +64,7 @@ public class Main {
             }
             for (int i = b_start; i < M; ++i) {
                 if (curr.value == seq2[i]) {
-                    result.add(new Number(i, curr.value));
+                    result.add(curr.value);
                     a_start = curr.index;
                     b_start = i + 1;
                     break;
@@ -70,8 +72,8 @@ public class Main {
             }
         }
         sb.append(result.size()).append('\n');
-        for (Number r : result) {
-            sb.append(r.value).append(' ');
+        for (int r : result) {
+            sb.append(r).append(' ');
         }
         bw.write(sb.toString());
 
