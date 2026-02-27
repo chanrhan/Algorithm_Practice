@@ -1,36 +1,37 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class Main {
-    static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    static final BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
     static int A, B, C;
 
-    public static long solve(int b) {
-        if (b == 1) {
+    public static long pow(long e) {
+        if (e == 1) {
             return A % C;
         }
-        long tmp = solve(b / 2);
+        long res = pow(e / 2);
 
-        if (b % 2 == 1) {
-            return (tmp * tmp % C) * A % C;
+        res = res * res;
+        if (e % 2 == 1L) { // odd
+            return (res % C) * A % C;
         }
-        return (tmp * tmp) % C;
+        return res % C;
     }
 
-    public static void main(String[] _s) throws IOException {
+    public static void main(String[] _s) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer tokenizer = new StringTokenizer(br.readLine());
         A = Integer.parseInt(tokenizer.nextToken());
         B = Integer.parseInt(tokenizer.nextToken());
         C = Integer.parseInt(tokenizer.nextToken());
 
-        bw.write(Long.toString(solve(B)));
+        bw.write(Long.toString(pow(B)));
 
         bw.close();
         br.close();
     }
+
 }
