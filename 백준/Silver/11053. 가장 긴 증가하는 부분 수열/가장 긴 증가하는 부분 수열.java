@@ -1,60 +1,48 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.StringTokenizer;
 
-// 256 MB = 256 * 10^6
-public class Main{
-    static BufferedReader br;
-    static BufferedWriter bw;
-    static int[] arr;
+public class Main {
+    static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static final BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
     static int N;
+    static int[] seq;
+    static Integer[] dp;
 
-    static int[] mem;
-
-    public static int calc(int curr) throws IOException {
-        if(curr == N-1){
-            mem[curr] = 1;
-        }
-
-        if(mem[curr] > 0){
-            return mem[curr];
-        }
-
-        int max = 1;
-        for(int i=curr+1; i<N;++i){
-            if(arr[i] > arr[curr]){
-                max = Math.max(max, calc(i)+1);
+    public static int LIS(int n) {
+        if (dp[n] == null) {
+            dp[n] = 1;
+            for (int i = n - 1; i >= 0; --i) {
+                if (seq[i] < seq[n]) {
+                    dp[n] = Math.max(dp[n], LIS(i) + 1);
+                }
             }
         }
-        mem[curr] = max;
-        return mem[curr];
+        return dp[n];
     }
 
-    public static void main(String[] args) throws IOException {
-        br = new BufferedReader(new InputStreamReader(System.in));
-        bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    public static void main(String[] _s) throws Exception {
+        N = Integer.parseInt(br.readLine());
         StringTokenizer tokenizer = new StringTokenizer(br.readLine());
-
-        // ---
-
-        N = Integer.parseInt(tokenizer.nextToken());
-        arr = new int[N];
-        mem = new int[N];
-        tokenizer = new StringTokenizer(br.readLine());
-
-        for(int i=0;i<N;++i){
-            arr[i] = Integer.parseInt(tokenizer.nextToken());
+        seq = new int[N];
+        dp = new Integer[N];
+        for (int i = 0; i < N; ++i) {
+            seq[i] = Integer.parseInt(tokenizer.nextToken());
         }
 
-        int max=0;
-        for(int i=0;i<N;++i){
-            max = Math.max(max, calc(i));
+        for (int i = 0; i < N; ++i) {
+            LIS(i);
         }
-
+        int max = 0;
+        for (int i = 0; i < N; ++i) {
+            max = Math.max(max, dp[i]);
+        }
         bw.write(Integer.toString(max));
 
-        // ---
-
-        br.close();
+        bw.flush();
         bw.close();
+        br.close();
     }
 }
