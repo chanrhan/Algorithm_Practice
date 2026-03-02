@@ -1,68 +1,70 @@
-// https://cladren123.tistory.com/255 코드 그대로 복붙
 import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
-import java.util.Stack;
+import java.io.OutputStreamWriter;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class Main {
+    static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static final BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-  public static void main(String[] args) throws IOException {
-
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    String order = br.readLine();
-
-    StringBuilder sb = new StringBuilder();
-    Stack<Character> operation = new Stack<>();
-
-    for(int i = 0; i < order.length(); i++) {
-
-      char c = order.charAt(i);
-
-      if(Character.isAlphabetic(c)) {
-        sb.append(order.charAt(i));
-      }
-      else {
-
-        if(c == '(') {
-          operation.add(c);
-        }
-        else if(c == ')') {
-          while(!operation.isEmpty()) {
-            if(operation.peek() == '(') {
-              operation.pop();
-              break;
+    public static boolean isPrior(char org, char other) {
+        if (org == '+' || org == '-') {
+            if (other == '(' || other == ')') {
+                return false;
             }
-            sb.append(operation.pop());
-          }
+            return true;
         }
-
-        else if(c == '*' || c == '/') {
-          while(!operation.isEmpty()) {
-            if(operation.peek() == '(' || operation.peek() == ')') break;
-            if(operation.peek() == '+' || operation.peek() == '-') break;
-            if(operation.peek() == '*' || operation.peek() == '/') sb.append(operation.pop());
-          }
-          operation.add(c);
+        if (org == '*' || org == '/') {
+            if (other == '(' || other == ')') {
+                return false;
+            }
+            if (other == '+' || other == '-') {
+                return false;
+            }
+            return true;
         }
-        else if(c == '+' || c == '-') {
-          while(!operation.isEmpty()) {
-            if(operation.peek() == '(' || operation.peek() == ')') break;
-            sb.append(operation.pop());
-          }
-          operation.add(c);
-        }
-      }
-
+        return false;
     }
 
-    while (!operation.isEmpty()) {
-      sb.append(operation.pop());
+    public static void main(String[] _s) throws Exception {
+        char[] inOrders = br.readLine().toCharArray();
+
+        StringBuilder sb = new StringBuilder();
+        Deque<Character> deque = new ArrayDeque<>();
+
+        char c;
+        Character p;
+        for (int i = 0; i < inOrders.length; ++i) {
+            c = inOrders[i];
+            if (c >= 'A' && c <= 'Z') {
+                sb.append(c);
+                continue;
+            }
+
+            if (c == '(') {
+                deque.addLast(c);
+            } else if (c == ')') {
+                while (!deque.isEmpty() && deque.peekLast() != '(') {
+                    sb.append(deque.pollLast());
+                }
+                deque.pollLast();
+            } else {
+                while (!deque.isEmpty() && isPrior(c, deque.peekLast())) {
+                    sb.append(deque.pollLast());
+                }
+                deque.addLast(c);
+            }
+        }
+        while (!deque.isEmpty()) {
+            sb.append(deque.pollLast());
+        }
+        bw.write(sb.toString());
+
+        bw.flush();
+        bw.close();
+        br.close();
     }
-
-    System.out.println(sb);
-
-
-
-  }
 
 }
