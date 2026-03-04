@@ -1,45 +1,45 @@
-import java.io.*;
-import java.util.StringTokenizer;
-
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 public class Main {
-    static BufferedReader br = null;
-    static BufferedWriter bw = null;
-    static StringTokenizer st = null;
-
+    static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static final BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
     static int N;
     static int[] arr;
-    static Integer[] mem;
+    static Integer[][] dp;
 
-    public static int dp(int index){
-        if(mem[index] == null){
-            mem[index] = Math.max(dp(index-2), dp(index-3) + arr[index-1]) + arr[index];
+    public static int dp(int n, int jump) {
+        if (n < 0) {
+            return Integer.MIN_VALUE;
         }
-        return mem[index];
+        if (n == 0) {
+            return arr[0];
+        }
+        if (dp[n][jump] == null) {
+            int max = 0;
+            if (jump == 1) {
+                max = Math.max(max, dp(n - 1, 0));
+            }
+            max = Math.max(max, dp(n - 2, 1));
+            dp[n][jump] = max + arr[n];
+        }
+        return dp[n][jump];
     }
 
-    public static void main(String[] args) throws IOException {
-        br = new BufferedReader(new InputStreamReader(System.in));
-        bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        st = new StringTokenizer(br.readLine());
-
-        N = Integer.parseInt(st.nextToken());
-        arr = new int[N+1];
-        mem = new Integer[N+1];
-        for(int i=1; i<=N; ++i){
-//            st = new StringTokenizer(br.readLine());
+    public static void main(String[] _s) throws Exception {
+        N = Integer.parseInt(br.readLine());
+        arr = new int[N + 1];
+        dp = new Integer[N + 1][2];
+        for (int i = 1; i <= N; ++i) {
             arr[i] = Integer.parseInt(br.readLine());
         }
-        mem[0] = arr[0]; // 없는값
-        mem[1] = arr[1];
-
-        if(N >= 2){
-            mem[2] = arr[1]+arr[2];
-        }
-
-        bw.write(Integer.toString(dp(N)));
+        dp(N, 1);
+        bw.write(Integer.toString(dp[N][1]));
 
         bw.close();
         br.close();
     }
 }
+
