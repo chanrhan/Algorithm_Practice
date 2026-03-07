@@ -1,40 +1,53 @@
 import java.util.*;
 
 class Solution {
+    public boolean isInteger(String str){
+        try{
+            Integer.parseInt(str);
+            return true;
+        }catch(NumberFormatException e){
+            return false;
+        }
+    }
+    
     public int solution(String arr[]) {
         int answer = -1;
-        int size = arr.length / 2 + 1;
-        long[][] maxDp = new long[size][size];
-        long[][] minDp = new long[size][size];
-    
-        for(int i=0;i<size;++i){
-            maxDp[i][i] = Long.parseLong(arr[i*2]);
-            minDp[i][i] = Long.parseLong(arr[i*2]);
+        List<Integer> numbers = new ArrayList<>();
+        List<String> operators = new ArrayList<>();
+        for(String el : arr){
+            if(isInteger(el)){
+                numbers.add(Integer.parseInt(el));
+            }else{
+                operators.add(el);
+            }
+        }
+        int numberSize = numbers.size();
+        int[][] maxDp = new int[numberSize][numberSize];
+        int[][] minDp = new int[numberSize][numberSize];
+        for(int i=0;i<numberSize; ++i){
+            maxDp[i][i] = numbers.get(i);
+            minDp[i][i] = numbers.get(i);
         }
         
-        long minValue, maxValue;
-        for(int e=1;e<size;++e){ // end
-            for(int s=e-1;s>=0;--s){ // start
-                maxDp[s][e] = Long.MIN_VALUE;
-                minDp[s][e] = Long.MAX_VALUE;
-                
-                for(int k=s;k<e;++k){ // k
-                    // System.out.printf("(%d, %d) : %d\n",s,e,k);
+        for(int e=1;e<numbers.size();++e){ // s : start, e : end, d : divide
+            for(int s = e-1; s >=0; --s){
+                maxDp[s][e] = Integer.MIN_VALUE;
+                minDp[s][e] = Integer.MAX_VALUE;
+                for(int d=s; d < e; ++d){
+                    // System.out.printf("(%d -|%d|- %d)\n", s,d,e);
+                    String op = operators.get(d);
                     
-                    if(arr[k * 2 + 1].equals("+")){
-                        maxValue = maxDp[s][k] + maxDp[k+1][e];
-                        minValue = minDp[s][k] + minDp[k+1][e];
+                    if(op.equals("+")){
+                        maxDp[s][e] = Math.max(maxDp[s][e], maxDp[s][d] + maxDp[d+1][e]);
+                        minDp[s][e] = Math.min(minDp[s][e], minDp[s][d] + minDp[d+1][e]);
                     }else{
-                        maxValue = maxDp[s][k] - minDp[k+1][e];
-                        minValue = minDp[s][k] - maxDp[k+1][e];
+                        maxDp[s][e] = Math.max(maxDp[s][e], maxDp[s][d] - minDp[d+1][e]);
+                        minDp[s][e] = Math.min(minDp[s][e], minDp[s][d] - maxDp[d+1][e]);
                     }
-                    maxDp[s][e] = Math.max(maxDp[s][e], maxValue);
-                    minDp[s][e] = Math.min(minDp[s][e], minValue);
                 }
             }
         }
-        answer = (int)maxDp[0][size-1];
         
-        return answer;
+        return maxDp[0][numberSize-1];
     }
 }
